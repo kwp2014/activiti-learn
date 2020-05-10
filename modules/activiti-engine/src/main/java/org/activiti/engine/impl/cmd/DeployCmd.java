@@ -43,6 +43,11 @@ public class DeployCmd<T> implements Command<Deployment>, Serializable {
     this.deploymentBuilder = deploymentBuilder;
   }
 
+    /**
+     * kwp 流程图部署
+     * @param commandContext
+     * @return
+     */
   public Deployment execute(CommandContext commandContext) {
     DeploymentEntity deployment = deploymentBuilder.getDeployment();
 

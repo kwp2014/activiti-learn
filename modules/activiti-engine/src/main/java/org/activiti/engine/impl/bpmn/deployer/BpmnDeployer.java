@@ -132,7 +132,9 @@ public class BpmnDeployer implements Deployer {
         	bpmnParse.setValidateSchema(false);
         	bpmnParse.setValidateProcess(false);
         }
-        
+
+        // kwp 完成xml文件到ProcessDefinitionEntity对象的转化
+
         bpmnParse.execute();
         
         for (ProcessDefinitionEntity processDefinition: bpmnParse.getProcessDefinitions()) {

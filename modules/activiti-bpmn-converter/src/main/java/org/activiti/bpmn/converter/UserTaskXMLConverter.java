@@ -117,6 +117,8 @@ public class UserTaskXMLConverter extends BaseBpmnXMLConverter {
     BpmnXMLUtil.addCustomAttributes(xtr, userTask, defaultElementAttributes, 
         defaultActivityAttributes, defaultUserTaskAttributes);
 
+    // kwp 解析用户任务下的子节点
+
     parseChildElements(getXMLElementName(), userTask, childParserMap, model, xtr);
     
     return userTask;

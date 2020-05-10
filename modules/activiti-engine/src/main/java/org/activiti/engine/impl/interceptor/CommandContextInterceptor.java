@@ -19,6 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * kwp 命令上下文拦截器
+ *
  * @author Tom Baeyens
  */
 public class CommandContextInterceptor extends AbstractCommandInterceptor {

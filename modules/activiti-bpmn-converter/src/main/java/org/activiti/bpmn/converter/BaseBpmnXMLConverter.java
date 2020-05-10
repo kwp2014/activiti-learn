@@ -87,7 +87,9 @@ public abstract class BaseBpmnXMLConverter implements BpmnXMLConstants {
     boolean notExclusive = parseNotExclusive(xtr);
     String defaultFlow = xtr.getAttributeValue(null, ATTRIBUTE_DEFAULT);
     boolean isForCompensation = parseForCompensation(xtr);
-    
+
+    // kwp 模板方法  交给具体等子类去实现
+
     BaseElement parsedElement = convertXMLToElement(xtr, model);
     
     if (parsedElement instanceof Artifact) {

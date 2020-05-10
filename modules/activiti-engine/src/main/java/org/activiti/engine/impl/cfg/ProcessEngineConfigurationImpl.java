@@ -227,7 +227,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author Tom Baeyens
  * @author Joram Barrez
  */
-public abstract class ProcessEngineConfigurationImpl extends ProcessEngineConfiguration {  
+public abstract class ProcessEngineConfigurationImpl extends ProcessEngineConfiguration {
 
   private static Logger log = LoggerFactory.getLogger(ProcessEngineConfigurationImpl.class);
   
@@ -590,41 +590,42 @@ public abstract class ProcessEngineConfigurationImpl extends ProcessEngineConfig
   }
   
   // init /////////////////////////////////////////////////////////////////////
-  
+  // kwp 流程引擎初始化
+
   protected void init() {
-  	initConfigurators();
-  	configuratorsBeforeInit();
-    initProcessDiagramGenerator();
-    initHistoryLevel();
-    initExpressionManager();
-    initDataSource();
-    initVariableTypes();
-    initBeans();
-    initFormEngines();
-    initFormTypes();
-    initScriptingEngines();
-    initClock();
-    initBusinessCalendarManager();
-    initCommandContextFactory();
-    initTransactionContextFactory();
-    initCommandExecutors();
-    initServices();
-    initIdGenerator();
-    initDeployers();
-    initJobHandlers();
-    initJobExecutor();
-    initAsyncExecutor();
-    initTransactionFactory();
-    initSqlSessionFactory();
-    initSessionFactories();
-    initJpa();
-    initDelegateInterceptor();
-    initEventHandlers();
-    initFailedJobCommandFactory();
-    initEventDispatcher();
-    initProcessValidator();
-    initDatabaseEventLogging();
-    configuratorsAfterInit();
+  	initConfigurators();            // 初始化配置器
+  	configuratorsBeforeInit();      // 调用配置器的beforeInit方法
+    initProcessDiagramGenerator();  // 初始化流程图生成器
+    initHistoryLevel();             // 初始化历史记录归档级别
+    initExpressionManager();        // 初始化表达式管理器
+    initDataSource();               // 初始化数据源
+    initVariableTypes();            // 初始化变量类型
+    initBeans();                    // 初始化可以管理的Beans
+    initFormEngines();              // 初始化表单引擎
+    initFormTypes();                // 初始化表单类型
+    initScriptingEngines();         // 初始化脚本引擎
+    initClock();                    // 初始化时间类
+    initBusinessCalendarManager();  // 初始化日期管理器
+    initCommandContextFactory();    // 初始化命令上下文工厂
+    initTransactionContextFactory();// 初始化事务上下文工厂
+    initCommandExecutors();         // 初始化命令执行器
+    initServices();                 // 为各种服务类对象设置命令执行器
+    initIdGenerator();              // 初始化ID生成器
+    initDeployers();                // 初始化部署器
+    initJobHandlers();              // 初始化定时作业处理器
+    initJobExecutor();              // 初始化定时作业执行器
+    initAsyncExecutor();            // 初始化异步执行器
+    initTransactionFactory();       // 初始化事务工厂
+    initSqlSessionFactory();        // 初始化SqlSession工厂
+    initSessionFactories();         // 初始化Session工厂
+    initJpa();                      // 初始化JPA
+    initDelegateInterceptor();      // 初始化拦截器
+    initEventHandlers();            // 初始化事件处理器
+    initFailedJobCommandFactory();  // 初始化失败命令工厂
+    initEventDispatcher();          // 初始化事件转发器
+    initProcessValidator();         // 初始化流程验证器
+    initDatabaseEventLogging();     // 初始化数据库事件记录
+    configuratorsAfterInit();       //调用配置器的afterInit方法
   }
 
   // failedJobCommandFactory ////////////////////////////////////////////////////////

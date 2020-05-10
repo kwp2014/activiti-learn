@@ -59,6 +59,10 @@ public class ActivitiEventDispatcherImpl implements ActivitiEventDispatcher {
 		eventSupport.removeEventListener(listenerToRemove);
 	}
 
+	/**
+	 * kwp 事件分发的具体实现
+	 * @param event event to dispatch.
+	 */
 	@Override
 	public void dispatchEvent(ActivitiEvent event) {
 		if (enabled) {

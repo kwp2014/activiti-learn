@@ -19,11 +19,16 @@ package org.activiti.engine.impl.pvm.runtime;
  * @author Daniel Meyer
  */
 public interface AtomicOperation {
-  
+
+  // kwp 原子操作接口定义了流程运转过程中的所有流程状态
+
   AtomicOperation PROCESS_START = new AtomicOperationProcessStart();
   AtomicOperation PROCESS_START_INITIAL = new AtomicOperationProcessStartInitial();
   AtomicOperation PROCESS_END = new AtomicOperationProcessEnd();
   AtomicOperation ACTIVITY_START = new AtomicOperationActivityStart();
+
+  // kwp 在ACTIVITY_EXECUTE中执行具体节点的行为
+
   AtomicOperation ACTIVITY_EXECUTE = new AtomicOperationActivityExecute();
   AtomicOperation ACTIVITY_END = new AtomicOperationActivityEnd();
   AtomicOperation TRANSITION_NOTIFY_LISTENER_END = new AtomicOperationTransitionNotifyListenerEnd();

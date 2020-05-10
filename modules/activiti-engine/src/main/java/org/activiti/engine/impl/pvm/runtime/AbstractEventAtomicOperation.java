@@ -33,7 +33,9 @@ public abstract class AbstractEventAtomicOperation implements AtomicOperation {
     ScopeImpl scope = getScope(execution);
     List<ExecutionListener> exectionListeners = scope.getExecutionListeners(getEventName());
     int executionListenerIndex = execution.getExecutionListenerIndex();
-    
+
+    // kwp 执行特定事件的所有监听器后，执行子类的特定逻辑
+
     if (exectionListeners.size()>executionListenerIndex) {
       execution.setEventName(getEventName());
       execution.setEventSource(scope);

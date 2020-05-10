@@ -125,7 +125,13 @@ public class ExecutionEntity extends VariableScopeImpl implements ActivityExecut
   protected Date lockTime;
   
   // state/type of execution ////////////////////////////////////////////////// 
-  
+  // kwp 执行实例树的4大属性
+  // isScope        是否在执行一个作用域活动
+  // isActive       当前是否进入一个作用域
+  // isConcurrent   是否兵法执行
+  // activityId     当前执行节点ID
+  // 流程在流转过程中，随着作用域的变化，执行实例会相应的分裂和整合
+
   /** indicates if this execution represents an active path of execution.
    * Executions are made inactive in the following situations:
    * <ul>

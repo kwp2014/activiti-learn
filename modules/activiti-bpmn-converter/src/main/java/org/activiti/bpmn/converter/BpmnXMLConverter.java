@@ -134,7 +134,9 @@ public class BpmnXMLConverter implements BpmnXMLConstants {
   protected ResourceParser resourceParser = new ResourceParser();
   protected SignalParser signalParser = new SignalParser();
   protected SubProcessParser subProcessParser = new SubProcessParser();
-	
+
+  // kwp 初始化元素解析器
+
 	static {
 		// events
 	  addConverter(new EndEventXMLConverter());
@@ -297,11 +299,15 @@ public class BpmnXMLConverter implements BpmnXMLConstants {
     }
   }
 
+  // kwp 具体解析XML文件 生成BpmnModel实例
+  // kwp 所有元素分为2个层次处理：1）和process同级等元素；2）process下的子元素：如用户任务，网关等
+
 	public BpmnModel convertToBpmnModel(XMLStreamReader xtr) { 
 	  BpmnModel model = new BpmnModel();
 	  model.setStartEventFormTypes(startEventFormTypes);
 	  model.setUserTaskFormTypes(userTaskFormTypes);
 		try {
+		    // kwp 指向当前解析到流程
 			Process activeProcess = null;
 			List<SubProcess> activeSubProcessList = new ArrayList<SubProcess>();
 			while (xtr.hasNext()) {
@@ -317,31 +323,31 @@ public class BpmnXMLConverter implements BpmnXMLConstants {
 				}
 				
 				if (xtr.isEndElement()  && ELEMENT_TRANSACTION.equals(xtr.getLocalName())) {
-          activeSubProcessList.remove(activeSubProcessList.size() - 1);
-        }
+                    activeSubProcessList.remove(activeSubProcessList.size() - 1);
+                }
 
 				if (xtr.isStartElement() == false) {
 					continue;
 				}
 
 				if (ELEMENT_DEFINITIONS.equals(xtr.getLocalName())) {
-				  definitionsParser.parse(xtr, model);
+				    definitionsParser.parse(xtr, model);
 				  
-        } else if (ELEMENT_RESOURCE.equals(xtr.getLocalName())) {
-          resourceParser.parse(xtr, model);
+                } else if (ELEMENT_RESOURCE.equals(xtr.getLocalName())) {
+                    resourceParser.parse(xtr, model);
           
 				} else if (ELEMENT_SIGNAL.equals(xtr.getLocalName())) {
 					signalParser.parse(xtr, model);
 					
 				} else if (ELEMENT_MESSAGE.equals(xtr.getLocalName())) {
-          messageParser.parse(xtr, model);
+                    messageParser.parse(xtr, model);
           
 				} else if (ELEMENT_ERROR.equals(xtr.getLocalName())) {
           
-          if (StringUtils.isNotEmpty(xtr.getAttributeValue(null, ATTRIBUTE_ID))) {
-            model.addError(xtr.getAttributeValue(null, ATTRIBUTE_ID),
-                xtr.getAttributeValue(null, ATTRIBUTE_ERROR_CODE));
-          }
+                    if (StringUtils.isNotEmpty(xtr.getAttributeValue(null, ATTRIBUTE_ID))) {
+                        model.addError(xtr.getAttributeValue(null, ATTRIBUTE_ID),
+                        xtr.getAttributeValue(null, ATTRIBUTE_ERROR_CODE));
+                    }
           
 				} else if (ELEMENT_IMPORT.equals(xtr.getLocalName())) {
 				  importParser.parse(xtr, model);
@@ -362,23 +368,23 @@ public class BpmnXMLConverter implements BpmnXMLConstants {
 				  participantParser.parse(xtr, model);
 				  
 				} else if (ELEMENT_MESSAGE_FLOW.equals(xtr.getLocalName())) {
-          messageFlowParser.parse(xtr, model);
+                    messageFlowParser.parse(xtr, model);
 
 				} else if (ELEMENT_PROCESS.equals(xtr.getLocalName())) {
 					
 				  Process process = processParser.parse(xtr, model);
 				  if (process != null) {
-            activeProcess = process;	
+				      activeProcess = process;
 				  }
-				
+
 				} else if (ELEMENT_POTENTIAL_STARTER.equals(xtr.getLocalName())) {
-				  potentialStarterParser.parse(xtr, activeProcess);
+				    potentialStarterParser.parse(xtr, activeProcess);
 				  
 				} else if (ELEMENT_LANE.equals(xtr.getLocalName())) {
-          laneParser.parse(xtr, activeProcess, model);
+                    laneParser.parse(xtr, activeProcess, model);
 					
 				} else if (ELEMENT_DOCUMENTATION.equals(xtr.getLocalName())) {
-				  
+
 					BaseElement parentElement = null;
 					if (!activeSubProcessList.isEmpty()) {
 						parentElement = activeSubProcessList.get(activeSubProcessList.size() - 1);
@@ -388,43 +394,45 @@ public class BpmnXMLConverter implements BpmnXMLConstants {
 					documentationParser.parseChildElement(xtr, parentElement, model);
 				
 				} else if (activeProcess == null && ELEMENT_TEXT_ANNOTATION.equals(xtr.getLocalName())) {
-				  String elementId = xtr.getAttributeValue(null, ATTRIBUTE_ID);
-          TextAnnotation textAnnotation = (TextAnnotation) new TextAnnotationXMLConverter().convertXMLToElement(xtr, model);
-          textAnnotation.setId(elementId);
-          model.getGlobalArtifacts().add(textAnnotation);
+				    String elementId = xtr.getAttributeValue(null, ATTRIBUTE_ID);
+                    TextAnnotation textAnnotation = (TextAnnotation) new TextAnnotationXMLConverter().convertXMLToElement(xtr, model);
+                        textAnnotation.setId(elementId);
+                    model.getGlobalArtifacts().add(textAnnotation);
           
 				} else if (activeProcess == null && ELEMENT_ASSOCIATION.equals(xtr.getLocalName())) {
-          String elementId = xtr.getAttributeValue(null, ATTRIBUTE_ID);
-          Association association = (Association) new AssociationXMLConverter().convertXMLToElement(xtr, model);
-          association.setId(elementId);
-          model.getGlobalArtifacts().add(association);
+                    String elementId = xtr.getAttributeValue(null, ATTRIBUTE_ID);
+                    Association association = (Association) new AssociationXMLConverter().convertXMLToElement(xtr, model);
+                        association.setId(elementId);
+                    model.getGlobalArtifacts().add(association);
 				
 				} else if (ELEMENT_EXTENSIONS.equals(xtr.getLocalName())) {
-				  extensionElementsParser.parse(xtr, activeSubProcessList, activeProcess, model);
+				    extensionElementsParser.parse(xtr, activeSubProcessList, activeProcess, model);
 				
 				} else if (ELEMENT_SUBPROCESS.equals(xtr.getLocalName())) {
-          subProcessParser.parse(xtr, activeSubProcessList, activeProcess);
+                    subProcessParser.parse(xtr, activeSubProcessList, activeProcess);
           
 				} else if (ELEMENT_TRANSACTION.equals(xtr.getLocalName())) {
-          subProcessParser.parse(xtr, activeSubProcessList, activeProcess);
+                    subProcessParser.parse(xtr, activeSubProcessList, activeProcess);
 					
 				} else if (ELEMENT_DI_SHAPE.equals(xtr.getLocalName())) {
-          bpmnShapeParser.parse(xtr, model);
+                    bpmnShapeParser.parse(xtr, model);
 				
 				} else if (ELEMENT_DI_EDGE.equals(xtr.getLocalName())) {
-				  bpmnEdgeParser.parse(xtr, model);
+				    bpmnEdgeParser.parse(xtr, model);
 
 				} else {
 
 					if (!activeSubProcessList.isEmpty() && ELEMENT_MULTIINSTANCE.equalsIgnoreCase(xtr.getLocalName())) {
 						
-					  multiInstanceParser.parseChildElement(xtr, activeSubProcessList.get(activeSubProcessList.size() - 1), model);
-					  
+					    multiInstanceParser.parseChildElement(xtr, activeSubProcessList.get(activeSubProcessList.size() - 1), model);
+
 					} else if (convertersToBpmnMap.containsKey(xtr.getLocalName())) {
-					  if (activeProcess != null) {
-  					  BaseBpmnXMLConverter converter = convertersToBpmnMap.get(xtr.getLocalName());
-  					  converter.convertToBpmnModel(xtr, model, activeProcess, activeSubProcessList);
-					  }
+
+					    // kwp 解析当前流程里的元素 如用户任务 网关等，用户任务的子节点由相应的解析器实现
+					    if (activeProcess != null) {
+  					        BaseBpmnXMLConverter converter = convertersToBpmnMap.get(xtr.getLocalName());
+  					        converter.convertToBpmnModel(xtr, model, activeProcess, activeSubProcessList);
+					    }
 					}
 				}
 			}

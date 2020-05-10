@@ -62,12 +62,19 @@ public class StartProcessInstanceCmd<T> implements Command<ProcessInstance>, Ser
         processInstanceBuilder.getBusinessKey(), processInstanceBuilder.getVariables(), processInstanceBuilder.getTenantId());
     this.processInstanceName = processInstanceBuilder.getProcessInstanceName();
   }
-  
+
+  /**
+   * kwp 流程实例的启动入口
+   *
+   * @param commandContext
+   * @return
+   */
   public ProcessInstance execute(CommandContext commandContext) {
     DeploymentManager deploymentManager = commandContext
       .getProcessEngineConfiguration()
       .getDeploymentManager();
-    
+
+    // kwp 获取节点和连线的运行时信息 流程定义
     // Find the process definition
     ProcessDefinitionEntity processDefinition = null;
     if (processDefinitionId != null) {
@@ -95,6 +102,7 @@ public class StartProcessInstanceCmd<T> implements Command<ProcessInstance>, Ser
               + processDefinition.getName() + " (id = " + processDefinition.getId() + ") is suspended");
     }
 
+    // kwp 创建流程实例
     // Start the process instance
     ExecutionEntity processInstance = processDefinition.createProcessInstance(businessKey);
 
@@ -106,7 +114,9 @@ public class StartProcessInstanceCmd<T> implements Command<ProcessInstance>, Ser
       processInstance.setName(processInstanceName);
       commandContext.getHistoryManager().recordProcessInstanceNameChange(processInstance.getId(), processInstanceName);
     }
-    
+
+    // kwp 启动流程实例 驱动流程运转
+
     processInstance.start();
     
     return processInstance;

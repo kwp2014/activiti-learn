@@ -45,7 +45,7 @@ public class SequenceFlowXMLConverter extends BaseBpmnXMLConverter {
     sequenceFlow.setSkipExpression(xtr.getAttributeValue(null, ATTRIBUTE_FLOW_SKIP_EXPRESSION));
     
     parseChildElements(getXMLElementName(), sequenceFlow, model, xtr);
-    
+
     return sequenceFlow;
   }
 

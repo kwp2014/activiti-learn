@@ -42,6 +42,9 @@ public class AtomicOperationProcessStartInitial extends AbstractEventAtomicOpera
     StartingExecution startingExecution = execution.getStartingExecution();
     if (activity==startingExecution.getInitial()) {
       execution.disposeStartingExecution();
+
+      // kwp 活动节点执行原子类 执行节点的行为
+      
       execution.performOperation(ACTIVITY_EXECUTE);
 
     } else {

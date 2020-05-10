@@ -19,6 +19,7 @@ public class UserTaskConverterTest extends AbstractConverterTest {
 
   @Test
   public void connvertXMLToModel() throws Exception {
+    // kwp 解析用户任务的具体实例
     BpmnModel bpmnModel = readXMLFile();
     validateModel(bpmnModel);
   }

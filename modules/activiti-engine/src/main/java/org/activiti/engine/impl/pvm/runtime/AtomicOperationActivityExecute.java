@@ -46,7 +46,7 @@ public class AtomicOperationActivityExecute implements AtomicOperation {
     
     try {
     	if(Context.getProcessEngineConfiguration() != null && Context.getProcessEngineConfiguration().getEventDispatcher().isEnabled()) {
-      	Context.getProcessEngineConfiguration().getEventDispatcher().dispatchEvent(
+      	    Context.getProcessEngineConfiguration().getEventDispatcher().dispatchEvent(
       			ActivitiEventBuilder.createActivityEvent(ActivitiEventType.ACTIVITY_STARTED, 
       					execution.getActivity().getId(),
       					(String) execution.getActivity().getProperty("name"),
@@ -56,7 +56,9 @@ public class AtomicOperationActivityExecute implements AtomicOperation {
       					(String) activity.getProperties().get("type"),
       					activity.getActivityBehavior().getClass().getCanonicalName()));
       }
-    	
+
+      // kwp 在节点执行原子类中调用 当前节点的原子行为类
+
       activityBehavior.execute(execution);
     } catch (RuntimeException e) {
       throw e;

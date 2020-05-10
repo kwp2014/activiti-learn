@@ -61,6 +61,9 @@ public class ProcessEngineImpl implements ProcessEngine {
   protected ProcessEngineConfigurationImpl processEngineConfiguration;
 
   public ProcessEngineImpl(ProcessEngineConfigurationImpl processEngineConfiguration) {
+
+    // kwp 门面模式 直接从配置器中获取属性
+
     this.processEngineConfiguration = processEngineConfiguration;
     this.name = processEngineConfiguration.getProcessEngineName();
     this.repositoryService = processEngineConfiguration.getRepositoryService();
@@ -76,7 +79,9 @@ public class ProcessEngineImpl implements ProcessEngine {
     this.commandExecutor = processEngineConfiguration.getCommandExecutor();
     this.sessionFactories = processEngineConfiguration.getSessionFactories();
     this.transactionContextFactory = processEngineConfiguration.getTransactionContextFactory();
-    
+
+    // kwp  命令可以理解为改变某些数据到状态
+
     commandExecutor.execute(processEngineConfiguration.getSchemaCommandConfig(), new SchemaOperationsProcessEngineBuild());
 
     if (name == null) {
@@ -84,7 +89,8 @@ public class ProcessEngineImpl implements ProcessEngine {
     } else {
       log.info("ProcessEngine {} created", name);
     }
-    
+
+    // kwp 注册流程引擎
     ProcessEngines.registerProcessEngine(this);
 
     if (jobExecutor != null && jobExecutor.isAutoActivate()) {
@@ -94,11 +100,15 @@ public class ProcessEngineImpl implements ProcessEngine {
     if (asyncExecutor != null && asyncExecutor.isAutoActivate()) {
       asyncExecutor.start();
     }
-     
+
+    // kwp 流程引擎生命周期监听器
+
     if (processEngineConfiguration.getProcessEngineLifecycleListener() != null) {
       processEngineConfiguration.getProcessEngineLifecycleListener().onProcessEngineBuilt(this);
     }
-    
+
+    // kwp 最后进行事件转发
+
     processEngineConfiguration.getEventDispatcher().dispatchEvent(
     		ActivitiEventBuilder.createGlobalEvent(ActivitiEventType.ENGINE_CREATED));
   }
