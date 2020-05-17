@@ -130,7 +130,7 @@ public class ExecutionEntity extends VariableScopeImpl implements ActivityExecut
   // isActive       当前是否进入一个作用域
   // isConcurrent   是否兵法执行
   // activityId     当前执行节点ID
-  // 流程在流转过程中，随着作用域的变化，执行实例会相应的分裂和整合
+  // 行为：流程在流转过程中，随着作用域的变化，执行实例会相应的分裂和整合
 
   /** indicates if this execution represents an active path of execution.
    * Executions are made inactive in the following situations:
@@ -414,6 +414,7 @@ public class ExecutionEntity extends VariableScopeImpl implements ActivityExecut
 
 
   // methods that translate to operations /////////////////////////////////////
+  // kwp 转向节点的具体行为操作
 
   public void signal(String signalName, Object signalData) {
     ensureActivityInitialized();
@@ -439,7 +440,10 @@ public class ExecutionEntity extends VariableScopeImpl implements ActivityExecut
       throw new PvmException("couldn't process signal '"+signalName+"' on activity '"+activity.getId()+"': "+e.getMessage(), e);
     }
   }
-  
+
+  // kwp  行为类处理完毕，将流程控制器交还给执行器
+  // kwp 在具体行为类中回调f
+
   public void take(PvmTransition transition) {
   	take(transition, true);
   }
@@ -1247,6 +1251,7 @@ public class ExecutionEntity extends VariableScopeImpl implements ActivityExecut
   }
   
   // persistent state /////////////////////////////////////////////////////////
+  // kwp 获取执行实体的状态
 
   public Object getPersistentState() {
     Map<String, Object> persistentState = new HashMap<String, Object>();
